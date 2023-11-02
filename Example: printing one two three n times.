@@ -1,0 +1,61 @@
+#include<bits/stdc++.h>
+using namespace std; 
+mutex m;  // Define a mutex named 'm' for synchronization.
+condition_variable cv;  // Define a condition variable named 'cv' for synchronization.
+int cnt = 1;  // Initialize a counter 'cnt' to 1.
+int n;  // Declare a variable 'n' for the number of times the sequence should be printed.
+
+// Function to print "one".
+void printone() {
+    for (int i = 0; i < n; i++) {  // Loop 'n' times to print "one" 'n' times.
+        unique_lock<mutex> lock(m);  // Acquire a unique lock on the mutex 'm'.
+
+        while (cnt != 1) {  // Wait until 'cnt' is equal to 1.
+            cv.wait(lock);  // Release the lock and wait on the condition variable 'cv'.
+        }
+
+        cout << "one ";  // Print "one".
+        cnt = 2;  // Update 'cnt' to 2.
+        cv.notify_all();  // Notify all waiting threads that 'cnt' has changed.
+    }
+}
+
+// Function to print "two".
+void printtwo() {
+    for (int i = 0; i < n; i++) {
+        unique_lock<mutex> lock(m);
+        while (cnt != 2) {
+            cv.wait(lock);
+        }
+        cout << "two ";
+        cnt = 3;
+        cv.notify_all();
+    }
+}
+
+// Function to print "three".
+void printthree() {
+    for (int i = 0; i < n; i++) {
+        unique_lock<mutex> lock(m);
+        while (cnt != 3) {
+            cv.wait(lock);
+        }
+        cout << "three" << endl;
+        cnt = 1;
+        cv.notify_all();
+    }
+}
+
+int main() {
+    cin >> n;  
+
+    thread t1(printone);  // Create a thread to execute the 'printone' function.
+    thread t2(printtwo);  // Create a thread to execute the 'printtwo' function.
+    thread t3(printthree);  // Create a thread to execute the 'printthree' function.
+
+    t1.join();  // Wait for thread t1 to finish.
+    t2.join();  // Wait for thread t2 to finish.
+    t3.join();  // Wait for thread t3 to finish.
+
+    return 0;  
+}
