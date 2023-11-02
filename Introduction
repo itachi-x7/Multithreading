@@ -1,0 +1,17 @@
+General syntax :
+  mutex m 
+  condition_variable cv 
+  bool flag 
+  int cnt
+  fxn_thread1() {
+            unique_lock<mutex>lock(m) 
+            while(~flag) {
+                cv.wait(lock) 
+            }
+            //print its work
+            flag!=~ //change the flag
+            cv.notify_all() 
+  }
+ main(){
+      thread t1(fxn_thread1) 
+ }
