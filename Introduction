@@ -14,4 +14,5 @@ General syntax :
   }
  main(){
       thread t1(fxn_thread1) 
+      t1.join() 
  }
