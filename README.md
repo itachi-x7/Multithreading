@@ -1,2 +1,2 @@
 # Multithreading-OS-
-General way to approach any concurrency problem
+Guide to approach any concurrency problem
